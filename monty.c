@@ -1,41 +1,24 @@
 #include "monty.h"
-
+global_var var_global;
 /**
- * main - entry point
- * @argc: number of args
- * @argv: filenames
- * Return: 0 or 1
+ * main - driver function for monty program
+ * @ac: int num of arguments
+ * @av: opcode file
+ * Return: 0
  */
-int main(int argc, char **argv)
+int main(int ac, char **av)
 {
-	FILE *fd;
-	char *line;
-	size_t len = 0;
-	ssize_t read;
-	stack_t *head = NULL;
-	stack_t *tail = NULL;
-	int mode = 0;
-	unsigned int line_number = 1;
+	stack_t *stack;
 
-	if (argc != 2)
+	stack = NULL;
+	if (ac != 2)
 	{
-		printf("USAGE: monty file\n");
+		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 
-	fd = fopen(argv[1], "r");
-
-	if (fd == NULL)
-	{
-		printf("Error: Can't open file %s\n", argv[1]);
-		exit(EXIT_FAILURE);
-	}
-
-	while ((read = getline(&line, &len, fd)) != -1)
-	{
-		eval(line, &head, &tail, &mode, line_number);
-		line_number++;
-	}
-
-	return (EXIT_SUCCESS);
+	read_file(av[1], &stack);
+    /* recordar liberar memorias */
+	free_dlistint(stack);
+	return (0);
 }
